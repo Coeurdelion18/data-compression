@@ -1,4 +1,4 @@
-#include "gzip_compress.h"
+#include "zstd_compress.h"  // Your renamed header with compress/decompress functions
 #include <vector>
 #include <fstream>
 #include <iostream>
@@ -6,8 +6,10 @@
 #include <iomanip>
 #include <filesystem>
 
-int compress_all_files(const std::string& directory_path, const std::string& output_file_path) {
+int compress_all_files(const std::string& directory_path, const std::string& output_dir) {
     namespace fs = std::filesystem;
+    fs::create_directories(output_dir);
+
     size_t file_count = 0;
     double total_ratio = 0.0;
 
@@ -36,14 +38,15 @@ int compress_all_files(const std::string& directory_path, const std::string& out
         in_file.read(reinterpret_cast<char*>(data.data()), file_size);
         in_file.close();
 
-        if (!compress_delta_with_zlib_gz(data, output_file_path)) {
+        std::string compressed_filename = output_dir + "/" + entry.path().filename().string() + ".zst";
+        if (!compress_delta_with_zstd(data, compressed_filename)) {
             std::cout << std::setw(35) << std::left << entry.path().filename().string()
                       << " | Compression failed\n";
             continue;
         }
 
         std::error_code ec;
-        auto compressed_size = fs::file_size(output_file_path, ec);
+        auto compressed_size = fs::file_size(compressed_filename, ec);
         if (ec || compressed_size == 0) {
             std::cout << std::setw(35) << std::left << entry.path().filename().string()
                       << " | Could not determine compressed file size\n";
@@ -69,8 +72,7 @@ int compress_all_files(const std::string& directory_path, const std::string& out
 }
 
 int main() {
-    const std::string input_dir = "../3_channel_data";
-    const std::string output_path = "./compressed_output.gz";
-
-    return compress_all_files(input_dir, output_path);
+    const std::string input_dir = "../../Data";
+    const std::string output_dir = "./compressed_zstd";
+    return compress_all_files(input_dir, output_dir);
 }

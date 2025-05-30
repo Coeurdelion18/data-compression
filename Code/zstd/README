@@ -1,0 +1,1 @@
+Here, it appears that the zstd algorithm performs better when the data is not first delta-encoded.

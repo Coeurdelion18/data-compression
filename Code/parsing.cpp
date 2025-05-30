@@ -43,10 +43,10 @@ void raw_to_char(std::ifstream& in_file, std::ofstream& out_file) {
 
 int main() {
 
-    std::string input_file_path {"../Data/TX-01338_8266_1673371909.raw"}; //Enter path to the input file.
+    std::string input_file_path {"/home/siddharthsastri/Documents/Petasense/Data/s3_vm4/VM4P-00018-1734523888880.raw"};
+ //Enter path to the input file.
     std::ifstream input_file {input_file_path, std::ios::binary};
-    std::ofstream out_file{"out_file.csv"};
-    std::ofstream out_file2{"out_file2.txt"};
+    std::ofstream out_file{"out_file_full.csv"};
 
     if (!input_file) {
         std::cerr << "Error: Could not open input file: " << input_file_path << std::endl;
@@ -59,7 +59,6 @@ int main() {
     }
 
     raw_to_csv(input_file, out_file);
-    raw_to_char(input_file, out_file2);
 
     return 0;
 }
