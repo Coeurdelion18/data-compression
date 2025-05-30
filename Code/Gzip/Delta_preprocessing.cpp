@@ -1,7 +1,7 @@
 #include "Delta_preprocessing.h"
 
 std::vector<int16_t> delta_encode(const std::vector<int16_t>& input) {
-    size_t size = input.size();
+    /*size_t size = input.size();
     if (size == 0) return {};
     
     std::vector<int16_t> delta(size);
@@ -10,6 +10,8 @@ std::vector<int16_t> delta_encode(const std::vector<int16_t>& input) {
         delta[i] = input[i] - input[i - 1];
     }
     return delta;
+    */
+   return input;
 }
 
 std::vector<int16_t> double_delta_encode(const std::vector<int16_t>& input) {
