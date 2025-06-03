@@ -1,0 +1,19 @@
+{
+    "device_id": "40004827e2381e68cc",
+    "mac": "4827e2381e68",
+    "data_encoding": "base64",
+    "pre_processed": false,
+    "channel_data": [
+        {
+            "channel_id": 25836,
+            "start_time": 1734513529,
+            "sampling_rate": 1,
+            "sampling_size": 1,
+            "measurement_type": "1",
+            "data_type": "m",
+            "index": 1,
+            "total": 1,
+            "data": "AIDVQQ=="
+        }
+    ]
+}

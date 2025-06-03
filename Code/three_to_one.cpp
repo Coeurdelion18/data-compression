@@ -3,8 +3,31 @@
 #include <vector>
 #include <string>
 #include <cstdint>
+#include <filesystem>
 
-void split(std::ifstream& in_file, std::ofstream& out_file1, std::ofstream& out_file2, std::ofstream& out_file3) {
+namespace fs = std::filesystem;
+
+void split(const fs::path& input_path, const fs::path& output_dir) {
+    std::ifstream in_file(input_path, std::ios::binary);
+    if (!in_file) {
+        std::cerr << "Failed to open input file: " << input_path << std::endl;
+        return;
+    }
+
+    // Prepare output file names
+    std::string stem = input_path.stem().string(); // filename without extension
+    fs::path out1 = output_dir / (stem + "_ch1.raw");
+    fs::path out2 = output_dir / (stem + "_ch2.raw");
+    fs::path out3 = output_dir / (stem + "_ch3.raw");
+
+    std::ofstream out_file1(out1, std::ios::binary);
+    std::ofstream out_file2(out2, std::ios::binary);
+    std::ofstream out_file3(out3, std::ios::binary);
+    if (!out_file1 || !out_file2 || !out_file3) {
+        std::cerr << "Failed to open output files for: " << input_path << std::endl;
+        return;
+    }
+
     in_file.seekg(0, std::ios::end);
     std::streamsize filesize = in_file.tellg();
     in_file.seekg(0, std::ios::beg);
@@ -21,25 +44,31 @@ void split(std::ifstream& in_file, std::ofstream& out_file1, std::ofstream& out_
             case 2: out_file3.write(reinterpret_cast<char*>(&data[i]), sizeof(int16_t)); break;
         }
     }
+
+    std::cout << "Split: " << input_path.filename() << " -> " 
+              << out1.filename() << ", " 
+              << out2.filename() << ", " 
+              << out3.filename() << "\n";
 }
 
 int main() {
-    std::string input_file_path {"/home/siddharthsastri/Documents/Petasense/Data/s3_vm4/VM4P-00018-1734523888880.raw"};
+    fs::path input_dir = "../Data/3_channel_data";
+    fs::path output_dir = "split_output";
 
-    std::ifstream input_file(input_file_path, std::ios::binary);
-    if (!input_file) {
-        std::cerr << "Failed to open input file: " << input_file_path << std::endl;
+    if (!fs::exists(input_dir) || !fs::is_directory(input_dir)) {
+        std::cerr << "Input directory does not exist: " << input_dir << std::endl;
         return 1;
     }
 
-    std::ofstream out_file1("out_file1.raw", std::ios::binary);
-    std::ofstream out_file2("out_file2.raw", std::ios::binary);
-    std::ofstream out_file3("out_file3.raw", std::ios::binary);
-    if (!out_file1 || !out_file2 || !out_file3) {
-        std::cerr << "Failed to open one or more output files." << std::endl;
-        return 1;
+    if (!fs::exists(output_dir)) {
+        fs::create_directory(output_dir);
     }
 
-    split(input_file, out_file1, out_file2, out_file3);
+    for (const auto& entry : fs::directory_iterator(input_dir)) {
+        if (entry.is_regular_file() && entry.path().extension() == ".raw") {
+            split(entry.path(), output_dir);
+        }
+    }
+
     return 0;
 }

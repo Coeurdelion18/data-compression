@@ -1,0 +1,15 @@
+{
+    "ruleName": "MeasurementUploadProd",
+    "topic": "device/prod/VM4P-00018/measurement",
+    "cloudwatchTraceId": "98b629be-b11f-05a2-4135-7ef8af04f781",
+    "clientId": "VM4P-00018",
+    "sourceIp": "157.45.81.88",
+    "base64OriginalPayload": "eyJkZXZpY2VfaWQiOiI0MDAwNDgyN2UyMzgxZTY4IiwibWFjIjoiNDgyN2UyMzgxZTY4IiwiZGF0YV9lbmNvZGluZyI6ImJhc2U2NCIsInByZV9wcm9jZXNzZWQiOmZhbHNlLCJjaGFubmVsX2RhdGEiOlt7ImNoYW5uZWxfaWQiOjI1ODM2LCJzdGFydF90aW1lIjoxNzM0NTEzNTI5LCJzYW1wbGluZ19yYXRlIjoxLCJzYW1wbGluZ19zaXplIjoxLCJtZWFzdXJlbWVudF90eXBlIjoiMSIsImRhdGFfdHlwZSI6Im0iLCJpbmRleCI6ICAgMSwidG90YWwiOiAgIDEsImRhdGEiOiJBSURWUVE9PSJ9XX0=",
+    "failures": [
+        {
+            "failedAction": "HttpAction",
+            "failedResource": "https://api.petasense.com/device/data",
+            "errorMessage": "HttpAction failed to make a request to the specified endpoint. StatusCode: 400. Reason: BAD REQUEST. Attempts: 1. Message arrived on: device/prod/VM4P-00018/measurement, Action: http, url: https://api.petasense.com/device/data"
+        }
+    ]
+}
