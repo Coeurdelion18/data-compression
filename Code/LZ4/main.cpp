@@ -73,7 +73,7 @@ int compress_all_files(const std::string& directory_path, const std::string& out
 }
 
 int main() {
-    const std::string input_dir = "../../Data";
+    const std::string input_dir = "../../Data/3_channel_data";
     const std::string output_dir = "./compressed_lz4";
     return compress_all_files(input_dir, output_dir);
 }

@@ -110,7 +110,7 @@ void compress_all_files_in_directory(const std::string& directory_path, const st
         out_file.write(reinterpret_cast<const char*>(output.data()), output.size());
         out_file.close();
 
-        double ratio = static_cast<double>(output.size()) / file_size;
+        double ratio = file_size / static_cast<double>(output.size());
 
         std::cout << std::setw(35) << std::left << entry.path().filename().string()
                   << " | " << std::setw(16) << file_size
@@ -166,7 +166,7 @@ int main() {
     */
 
 int main() {
-    std::string input_directory = "../../Data";
+    std::string input_directory = "../../Data/3_channel_data";
     std::string output_file_path = "./compressed_output.hsz";
     compress_all_files_in_directory(input_directory, output_file_path);
     return 0;
