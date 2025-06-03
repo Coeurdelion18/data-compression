@@ -52,8 +52,7 @@ int compress_all_files(const std::string& directory_path, const std::string& out
 
         double ratio = static_cast<double>(file_size) / compressed_size;
         std::cout << std::setw(35) << std::left << entry.path().filename().string()
-                  << " | Compression ratio: " << std::fixed << std::setprecision(2) << ratio << '\n';
-
+                  << " | Compression ratio: " << std::fixed << std::setprecision(2) << file_size << " "<< compressed_size << " " << ratio << '\n';
         total_ratio += ratio;
         file_count++;
     }
@@ -69,7 +68,7 @@ int compress_all_files(const std::string& directory_path, const std::string& out
 }
 
 int main() {
-    const std::string input_dir = "../../Data/3_channel_data";
+    const std::string input_dir = "../split_output";
     const std::string output_path = "./compressed_output.gz";
 
     return compress_all_files(input_dir, output_path);
