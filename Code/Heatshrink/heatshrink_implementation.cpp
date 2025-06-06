@@ -166,7 +166,7 @@ int main() {
     */
 
 int main() {
-    std::string input_directory = "../split_output";
+    std::string input_directory = "../../Data/3_axis_raw_split";
     std::string output_file_path = "./compressed_output.hsz";
     compress_all_files_in_directory(input_directory, output_file_path);
     return 0;

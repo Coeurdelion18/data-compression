@@ -43,7 +43,7 @@ void raw_to_char(std::ifstream& in_file, std::ofstream& out_file) {
 
 int main() {
 
-    std::string input_file_path {"/home/siddharthsastri/Documents/Petasense/Data/s3_vm4/VM4P-00018-1734523888880.raw"};
+    std::string input_file_path {"/home/siddharthsastri/Documents/Petasense/Data/3_axis_raw_split/data0_ch1.raw"};
  //Enter path to the input file.
     std::ifstream input_file {input_file_path, std::ios::binary};
     std::ofstream out_file{"out_file_full.csv"};
