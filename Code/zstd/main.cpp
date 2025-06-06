@@ -72,7 +72,7 @@ int compress_all_files(const std::string& directory_path, const std::string& out
 }
 
 int main() {
-    const std::string input_dir = "../split_output/";
+    const std::string input_dir = "../../Data/3_axis_raw_split";
     const std::string output_dir = "./compressed_zstd";
     return compress_all_files(input_dir, output_dir);
 }
