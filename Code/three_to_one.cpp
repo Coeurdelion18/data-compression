@@ -52,8 +52,8 @@ void split(const fs::path& input_path, const fs::path& output_dir) {
 }
 
 int main() {
-    fs::path input_dir = "../Data/3_channel_data";
-    fs::path output_dir = "split_output";
+    fs::path input_dir = "../Data/3_axis_raw";
+    fs::path output_dir = "../Data/3_axis_raw_split";
 
     if (!fs::exists(input_dir) || !fs::is_directory(input_dir)) {
         std::cerr << "Input directory does not exist: " << input_dir << std::endl;
