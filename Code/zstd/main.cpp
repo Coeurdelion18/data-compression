@@ -1,78 +1,45 @@
-#include "zstd_compress.h"  // Your renamed header with compress/decompress functions
+#include "base64.h"
 #include <vector>
-#include <fstream>
-#include <iostream>
 #include <string>
-#include <iomanip>
-#include <filesystem>
+#include <cstdint>
+#include <cstring>
+#include <iostream>
+#include <fstream>
+#include "zstd_compress.h"
 
-int compress_all_files(const std::string& directory_path, const std::string& output_dir) {
-    namespace fs = std::filesystem;
-    fs::create_directories(output_dir);
-
-    size_t file_count = 0;
-    double total_ratio = 0.0;
-
-    for (const auto& entry : fs::directory_iterator(directory_path)) {
-        if (!entry.is_regular_file()) continue;
-        const std::string input_file_path = entry.path().string();
-
-        std::ifstream in_file(input_file_path, std::ios::binary);
-        if (!in_file) {
-            std::cerr << "Failed to open " << input_file_path << "\n";
-            continue;
-        }
-
-        in_file.seekg(0, std::ios::end);
-        std::streamsize file_size = in_file.tellg();
-        in_file.seekg(0, std::ios::beg);
-
-        if (file_size % sizeof(int16_t) != 0) {
-            std::cout << std::setw(35) << std::left << entry.path().filename().string()
-                      << " | Invalid file size\n";
-            continue;
-        }
-
-        size_t sample_count = file_size / sizeof(int16_t);
-        std::vector<int16_t> data(sample_count);
-        in_file.read(reinterpret_cast<char*>(data.data()), file_size);
-        in_file.close();
-
-        std::string compressed_filename = output_dir + "/" + entry.path().filename().string() + ".zst";
-        if (!compress_delta_with_zstd(data, compressed_filename)) {
-            std::cout << std::setw(35) << std::left << entry.path().filename().string()
-                      << " | Compression failed\n";
-            continue;
-        }
-
-        std::error_code ec;
-        auto compressed_size = fs::file_size(compressed_filename, ec);
-        if (ec || compressed_size == 0) {
-            std::cout << std::setw(35) << std::left << entry.path().filename().string()
-                      << " | Could not determine compressed file size\n";
-            continue;
-        }
-
-        double ratio = static_cast<double>(file_size) / compressed_size;
-        std::cout << std::setw(35) << std::left << entry.path().filename().string()
-                  << " | Compression ratio: " << std::fixed << std::setprecision(2) << file_size << " "<< compressed_size << " " << ratio << '\n';
-
-        total_ratio += ratio;
-        file_count++;
-    }
-
-    if (file_count > 0) {
-        std::cout << "\nMean compression ratio: " << std::fixed << std::setprecision(2)
-                  << (total_ratio / file_count) << '\n';
-    } else {
-        std::cout << "\nNo valid files processed.\n";
-    }
-
-    return 0;
+// Safe wrapper for binary base64 decode
+std::vector<uint8_t> base64_decode_binary(const std::string& encoded) {
+    std::string decoded_str = base64_decode(encoded, /*remove_linebreaks=*/true);
+    return std::vector<uint8_t>(decoded_str.begin(), decoded_str.end());
 }
 
 int main() {
-    const std::string input_dir = "../../Data/3_axis_raw_split";
-    const std::string output_dir = "./compressed_zstd";
-    return compress_all_files(input_dir, output_dir);
+    std::ifstream file("data1.txt");
+    if (!file) {
+        std::cerr << "Failed to open input file.\n";
+        return 1;
+    }
+
+    std::string encoded((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    file.close();
+
+    std::vector<uint8_t> decoded_buffer = base64_decode_binary(encoded);
+
+    // Pad to 80004 bytes if necessary
+    if (decoded_buffer.size() < 80004)
+        decoded_buffer.resize(80004, 0);
+
+    // Convert to int16_t buffer (80004 bytes → 40002 elements)
+    size_t int16_buffer_size = decoded_buffer.size() / 2;
+    std::vector<int16_t> int16_buffer(int16_buffer_size);
+    std::memcpy(int16_buffer.data(), decoded_buffer.data(), int16_buffer_size * sizeof(int16_t));
+
+    // Compress
+    if (!compress_delta_with_zstd(int16_buffer, "compressed_output.zst")) {
+        std::cerr << "Compression failed\n";
+        return 1;
+    }
+
+    std::cout << "Compression successful.\n";
+    return 0;
 }
