@@ -1,0 +1,10 @@
+{
+    "C_Cpp.intelliSenseEngine": "default",
+    "idf.espIdfPath": "/home/siddharthsastri/esp/v5.4.1/esp-idf",
+    "idf.pythonInstallPath": "/home/siddharthsastri/miniconda3/bin/python",
+    "idf.openOcdConfigs": [
+        "board/esp32s3-builtin.cfg"
+    ],
+    "idf.port": "/dev/ttyUSB0",
+    "idf.toolsPath": "/home/siddharthsastri/.espressif"
+}

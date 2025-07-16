@@ -1,1 +1,0 @@
-This is the code I wrote to try and run ZSTD on the esp32s3 board. Unfortunately, it was not very successful, as the memory required by ZSTD is too high to run in this embedded context. The ZSTD compressor throws an 'insufficient memory' error when this code is run. 
